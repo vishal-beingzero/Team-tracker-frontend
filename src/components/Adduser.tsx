@@ -32,7 +32,7 @@ const Adduser: React.FC = () => {
 
   const handleAddUser = async () => {
     try {
-      const res = await axios.post(`https://team-tracker-n3ck.onrender.com/codeforces/user/addUser`, form);
+      const res = await axios.post(`${import.meta.env.VITE_REACT_BACKEND_URI}/codeforces/user/addUser`, form);
       console.log(res);
       console.log('User added successfully!');
       setForm({ name: '', githubHandle: '', codeforcesHandle: '', team: '' });
@@ -56,7 +56,7 @@ const Adduser: React.FC = () => {
     try {
       for (const user of data) {
         console.log(user);
-        const res = await axios.post('https://team-tracker-n3ck.onrender.com/codeforces/user/addUser', user);
+        const res = await axios.post(`${import.meta.env.VITE_REACT_BACKEND_URI}/codeforces/user/addUser`, user);
         console.log(res);
       }
       alert('All users added successfully!');
