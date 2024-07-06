@@ -1,0 +1,46 @@
+/* src/components/SubmissionTable.css */
+
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #dee2e6; /* Add border to the entire table */
+}
+
+.custom-table th,
+.custom-table td {
+  padding: 12px;
+  text-align: center; /* Center-align all table cells */
+  vertical-align: middle; /* Align content vertically in the middle */
+  border: 1px solid #dee2e6; /* Add border to each cell */
+}
+
+.custom-table th {
+  background-color: rgb(69, 56, 56); /* Primary color for headers */
+  color: #fff; /* White text color */
+  font-weight: bold; /* Bold font for headers */
+  font-size: 1.1rem; /* Larger font size for headers */
+  text-transform: uppercase; /* Uppercase text for headers */
+  cursor: pointer; /* Change cursor to pointer on hover */
+}
+
+.custom-table th:hover {
+  /* background-color: rgb(24, 19, 19); Darker shade on hover */
+  color: #f49b1f;
+
+}
+
+.custom-table tbody tr.even-row {
+  background-color: #f8f9fa; /* Light gray background for even rows */
+}
+
+.custom-table tbody tr.odd-row {
+  background-color: #e9ecef; /* Lighter gray background for odd rows */
+}
+
+.table-responsive {
+  overflow-x: auto; /* Enable horizontal scrolling on smaller screens */
+}
+
+.sort-icon {
+  margin-left: 5px; /* Add space before the sort icon */
+}

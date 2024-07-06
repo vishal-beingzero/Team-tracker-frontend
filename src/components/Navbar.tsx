@@ -1,9 +1,11 @@
 // src/components/Navbar.tsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled, { keyframes, css } from 'styled-components';
 import { Navbar as BootstrapNavbar, Nav } from 'react-bootstrap';
-import { Link } from 'react-router-dom'; // Import Link from react-router-dom
+import { Link, useLocation } from 'react-router-dom'; // Import Link and useLocation from react-router-dom
 import sitelogo from '../assets/sitelogo.png'
+import axios from 'axios';
+import { formatDistanceToNow } from 'date-fns';
 
 const fadeIn = keyframes`
   from {
@@ -62,18 +64,26 @@ const NavbarContainer = styled(BootstrapNavbar)`
   position: relative;
 `;
 
-const CustomLink = styled(Link)`
+
+const CustomLink = styled(Link)<{ active?: boolean }>`
+  // color: ${({ active }) => (active ? '#f0ad4e' : '#6c757d')} !important;
   color: #d5e4f0 !important; /* Adjust to your chosen elegant color */
   font-weight: bold;
-  text-decoration: none; /* Remove underline */
-  margin: 0 10px; /* Adjust margin as needed */
-  padding: 0.7rem 0.9rem; /* Adjust padding as needed */
+  text-decoration: none;
+  margin: 0 10px;
+  padding: 0.7rem 0.9rem;
   &:hover {
-    box-shadow: 1px 1px 3px white;
-    border-radius: 5px;
-    text-decoration: kk; /* Underline on hover */
+     box-shadow: 1px 1px 3px white;
+     border-radius: 5px;
+     text-decoration: kk; /* Underline on hover */
   }
+  border-bottom: ${({ active }) => (active ? '1.5px solid white' : 'none')};
+  border-radius: ${({ active }) => (active ? '4px' : '1.5px')};
+  // border-top: ${({ active }) => (active ? '2px solid black' : 'none')};
+
+
 `;
+
 
 const Brand = styled(BootstrapNavbar.Brand)`
   font-size: 1.5rem;
@@ -150,6 +160,29 @@ const BringBackButton = styled.button`
 
 const Navbar: React.FC = () => {
   const [filled, setFilled] = useState(0); // 0 to 1 range
+  const [message, setMessage] = useState("Last crawl time of codeforces was: "); // 0 to 1 range
+  const location = useLocation(); // Get the current location
+
+  useEffect(()=>{
+    const geLastCrawlTime = async () =>{
+      try{
+        const res = await axios.get(`${import.meta.env.VITE_REACT_BACKEND_URI}/last-crawl-time`);
+        console.log(res.data, "hiio");
+        const timestamp = Number(res.data.LastCrawlTimeStamp);
+        let timeAgoString = formatDistanceToNow(new Date(timestamp), { addSuffix: true })+"";
+        timeAgoString = timeAgoString.charAt(0).toUpperCase() + timeAgoString.slice(1);
+        setMessage("Crawled: " + timeAgoString);
+        console.log("last crawled : " + timeAgoString);
+      }
+      catch(error)
+      {
+        console.log("error while fetching last crawl time");
+      }
+    } 
+    geLastCrawlTime();
+
+  }, [])
+
 
   const handleClick = () => {
     if (filled < 1) {
@@ -164,6 +197,8 @@ const Navbar: React.FC = () => {
     }
   };
 
+  const isActive = (path: string) => location.pathname === path;
+
   return (
     <NavbarContainer expand="lg">
       <Brand as={Link} to="/">
@@ -174,10 +209,10 @@ const Navbar: React.FC = () => {
       <BootstrapNavbar.Toggle aria-controls="basic-navbar-nav" />
       <BootstrapNavbar.Collapse id="basic-navbar-nav">
         <Nav className="ml-auto">
-          <CustomLink to="/Leaderboard">Leaderboard</CustomLink>
-          <CustomLink to="/adduser">Add User</CustomLink>
-          <CustomLink to="/teamdetails">Team's Performance</CustomLink>
-          <CustomLink to="/userdetails">User Level</CustomLink>
+          <CustomLink to="leaderboard" active={isActive("/leaderboard")}>Leaderboard</CustomLink>
+          <CustomLink to="/adduser" active={isActive("/adduser")}>Add User</CustomLink>
+          <CustomLink to="/teamdetails" active={isActive("/teamdetails")}>Team's Performance</CustomLink>
+          <CustomLink to="/userdetails" active={isActive("/userdetails")}>User Level</CustomLink>
         </Nav>
       </BootstrapNavbar.Collapse>
       <AnimatedElement filled={filled} onClick={handleClick}>
@@ -193,7 +228,7 @@ const Navbar: React.FC = () => {
       </AnimatedElement>
       {filled === 1 && (
         <BringBackButton onClick={() => setFilled(0)}>
-          Recall the Ball
+          {message}
         </BringBackButton>
       )}
     </NavbarContainer>
