@@ -22,14 +22,16 @@ const Leaderboard = () => {
 
 
   useEffect(() => {
+
     const renderLoader = async () => {
-      await new Promise(resolve => setTimeout(resolve, 2100)); // Simulating 3 seconds delay
+      await new Promise(resolve => setTimeout(resolve, 1800)); // Simulating 2 seconds delay
       setLoading(false); // Hide loader after 3 seconds
     };
     renderLoader();
+
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/codeforces/user/all/distinctAccSubmissionsAfter18June");
+        const response = await axios.get(`${import.meta.env.VITE_REACT_BACKEND_URI}/codeforces/user/all/distinctAccSubmissionsAfter18June`);
         const userData = response.data;
         console.log(userData.data);
         setSubmissions(userData.data);
@@ -104,7 +106,7 @@ const Leaderboard = () => {
         <div className="col-auto d-flex align-items-center">
           <a id="not-clickable">◕‿‿◕ </a>
           <Tooltip anchorSelect="#not-clickable"  arrowColor='#f0ad4e' clickable={true} delayHide={800}style={{backgroundColor:'#41323d', color:"white", borderRadius: '13px', borderWidth:'3px', borderColor: 'white'}}> 
-            Only distinct Successfully submitted questions are being considered to build this leaderboard
+            These are the submissions considered from 18
           </Tooltip>
           <div className="form-check form-switch ms-3">
             <input

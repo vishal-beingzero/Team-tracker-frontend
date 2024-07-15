@@ -212,7 +212,8 @@ const Navbar: React.FC = () => {
           <CustomLink to="leaderboard" active={isActive("/leaderboard")}>Leaderboard</CustomLink>
           <CustomLink to="/adduser" active={isActive("/adduser")}>Add User</CustomLink>
           <CustomLink to="/teamdetails" active={isActive("/teamdetails")}>Team's Performance</CustomLink>
-          <CustomLink to="/userdetails" active={isActive("/userdetails")}>User Level</CustomLink>
+          <CustomLink to="/addproblems" active={isActive("/addproblems")}>Add Problems</CustomLink>
+          <CustomLink to="/userdetails" active={isActive("/userdetails")}>User Details</CustomLink>
         </Nav>
       </BootstrapNavbar.Collapse>
       <AnimatedElement filled={filled} onClick={handleClick}>

@@ -1,6 +1,7 @@
 // src/components/TeamPerformance.tsx
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import { Loader } from './Loader';
 
 interface Submission {
   name: string;
@@ -11,13 +12,22 @@ interface Submission {
 
 const TeamDetails: React.FC = () => {
   const [submissions, setSubmissions] = useState<Submission[]>([]);
+  const [loading, setLoading] = useState<Boolean>(true);
+
 
   useEffect(() => {
     const getData = async () => {
-      const data = await axios.get("http://localhost:3000/codeforces/user/all/distinctAccSubmissionsAfter18June");
+      const data = await axios.get(`${import.meta.env.VITE_REACT_BACKEND_URI}/codeforces/user/all/distinctAccSubmissionsAfter18June`);
       setSubmissions(data.data.data);
     };
     getData();
+
+    const renderLoader = async () => {
+        await new Promise(resolve => setTimeout(resolve, 1800)); // Simulating 2 seconds delay
+        setLoading(false); // Hide loader after 3 seconds
+      };
+      renderLoader();
+    
   }, []);
 
   // Function to calculate team-wise performance metrics
@@ -37,6 +47,11 @@ const TeamDetails: React.FC = () => {
   };
 
   const teamPerformance = calculateTeamPerformance();
+
+  if(loading)
+  {
+    return <Loader/>
+  }
 
   return (
     <div className="container mt-5">

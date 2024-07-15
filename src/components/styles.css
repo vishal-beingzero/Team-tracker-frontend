@@ -1,0 +1,75 @@
+/* styles.css */
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f2f5;
+    color: #444;
+    margin: 0;
+    padding: 0;
+  }
+  
+  
+  p.lead {
+    font-size: 1.25rem;
+    color: #6c757d;
+  }
+  
+  .card {
+    border: none;
+    border-radius: 1rem;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  }
+  
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  }
+  
+  .card-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #007bff;
+  }
+  
+  .card-text {
+    font-size: 1rem;
+    color: #6c757d;
+  }
+  
+  .badge {
+    font-size: 0.9rem;
+    padding: 0.5em 1em;
+    background-color: #f0ad4e;
+    color: black;
+  }
+  
+  ul.list-group {
+    border-radius: 0.75rem;
+  }
+  
+  ul.list-group li.list-group-item {
+    border: none;
+    border-bottom: 1px solid #e9ecef;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  ul.list-group li.list-group-item:last-child {
+    border-bottom: none;
+  }
+  
+  .spinner-border {
+    width: 3rem;
+    height: 3rem;
+    border-width: 0.4em;
+  }
+  
+  /* .head:hover{
+    cursor: pointer;
+    color: #f0ad4e;
+  } */
+
+  #not-clickable:hover{
+    color: #f0ad4e;
+  }

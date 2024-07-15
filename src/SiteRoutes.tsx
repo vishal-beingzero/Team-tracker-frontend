@@ -4,6 +4,7 @@ import App from "./App";
 import Adduser from './components/Adduser'
 import Navbar from "./components/Navbar";
 import TeamDetails from "./components/TeamDetails";
+import AddProblems from "./components/Addproblems";
 import UserDetails from "./components/UserDetails";
 
 export default function SiteRoutes() {
@@ -16,6 +17,7 @@ export default function SiteRoutes() {
         <Route path="/adduser" element={<Adduser />} />
         <Route path="/teamdetails" element={<TeamDetails />} />
         <Route path="/userdetails" element={<UserDetails />} />
+        <Route path="/addproblems" element={<AddProblems />} />
       </Routes>
     </BrowserRouter>
   );
