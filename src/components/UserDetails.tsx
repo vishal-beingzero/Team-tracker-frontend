@@ -36,9 +36,8 @@ const UserDetails: React.FC = () => {
   useEffect(() => {
     const fetchSubmissions = async () => {
       try {
-        const response = await axios.get<User[]>(`${import.meta.env.VITE_REACT_BACKEND_URI}/codeforces/user/all/distinctAccSubmissionsAfter18June`);
-        setUsers(response.data);
-        setUsers(response.data);
+        const response = await axios.get(`${import.meta.env.VITE_REACT_BACKEND_URI}/codeforces/user/all/distinctAccSubmissionsAfter18June`);
+        setUsers(response.data.data);
       } catch (error) {
         console.error('Error fetching submissions:', error);
       }
