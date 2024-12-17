@@ -5,7 +5,7 @@ const QRScanner: React.FC = () => {
     // Change data state to be an array
     const [scannedData, setScannedData] = useState<string[]>([]);
     const [error, setError] = useState<string | null>(null);
-    const [camera, setCamera] = useState<string>('rear');
+    const [camera, setCamera] = useState<string>('user');
 
     useEffect(()=>{
         console.log(camera);
@@ -44,7 +44,7 @@ const QRScanner: React.FC = () => {
                     onScan={handleScan}
                     style={{ width: '100%', height: '100%' }} // Full width/height to match parent div
                 />
-                <button onClick={()=>setCamera(camera=='rear'?'front':'rear')}>toggle</button>
+                <button onClick={()=>setCamera(camera==='user'?'environment':'user')}>toggle</button>
             </div>
             {error && <p style={{ color: 'red' }}>Error: {error}</p>}
             {scannedData.length > 0 && (
