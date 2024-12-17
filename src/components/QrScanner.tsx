@@ -1,10 +1,15 @@
-import React, { useState, CSSProperties } from 'react';
+import React, { useState, CSSProperties, useEffect } from 'react';
 import QrScanner from 'react-qr-scanner';
 
 const QRScanner: React.FC = () => {
     // Change data state to be an array
     const [scannedData, setScannedData] = useState<string[]>([]);
     const [error, setError] = useState<string | null>(null);
+    const [camera, setCamera] = useState<string>('rear');
+
+    useEffect(()=>{
+        console.log(camera);
+    }, [camera])
 
     const handleScan = (result: any) => {
         if (result && result.text) {
@@ -33,11 +38,13 @@ const QRScanner: React.FC = () => {
             <h1>QR Code Scanner</h1>
             <div style={scannerStyle}>
                 <QrScanner
+                    facingMode={camera}
                     delay={300}
                     onError={handleError}
                     onScan={handleScan}
                     style={{ width: '100%', height: '100%' }} // Full width/height to match parent div
                 />
+                <button onClick={()=>setCamera(camera=='rear'?'front':'rear')}>toggle</button>
             </div>
             {error && <p style={{ color: 'red' }}>Error: {error}</p>}
             {scannedData.length > 0 && (

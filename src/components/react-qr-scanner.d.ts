@@ -3,7 +3,7 @@ declare module 'react-qr-scanner' {
   import React from 'react';
 
   interface QrScannerProps {
-    facingMode?: string | { exact: string };
+    facingMode: string;
     delay?: number;
     onError: (error: Error) => void;
     onScan: (data: string | null) => void;
