@@ -5,7 +5,8 @@ import Adduser from './components/Adduser'
 import Navbar from "./components/Navbar";
 import TeamDetails from "./components/TeamDetails";
 import AddProblems from "./components/Addproblems";
-import UserDetails from "./components/UserDetails";
+// import UserDetails from "./components/UserDetails";
+import QrScanner from './components/QrScanner'
 
 export default function SiteRoutes() {
   return (
@@ -16,7 +17,7 @@ export default function SiteRoutes() {
         <Route path="/leaderboard" element={<Leaderboard />} />
         <Route path="/adduser" element={<Adduser />} />
         <Route path="/teamdetails" element={<TeamDetails />} />
-        <Route path="/userdetails" element={<UserDetails />} />
+        <Route path="/userdetails" element={<QrScanner />} />
         <Route path="/addproblems" element={<AddProblems />} />
       </Routes>
     </BrowserRouter>
