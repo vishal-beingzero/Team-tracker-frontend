@@ -12,6 +12,19 @@ const QRScanner: React.FC = () => {
         console.log(camera);
     }, [camera])
 
+    const handleScan = (result: any) => {
+        if (result && result.text) {
+            // Add the new scanned data to the array (if it doesn't already exist)
+            if (!scannedData.includes(result.text)) {
+                setScannedData((prevData) => [...prevData, result.text]);
+            }
+            setError(null); // Reset any previous errors
+        }
+    };
+
+    const handleError = (err: any) => {
+        setError(err.message);
+    };
 
     const scannerStyle:CSSProperties = {
         width: '300px', // Set your desired width
@@ -29,7 +42,7 @@ const QRScanner: React.FC = () => {
                 <QrReader  
                     constraints={{facingMode:camera}}
                     // chooseDeviceId={choose}
-                    containerStyle={{}}
+                    onResult={handleScan}
                 />
                 <button onClick={()=>setCamera(camera=='user'?'environment':'user')}>toggle</button>
             </div>
