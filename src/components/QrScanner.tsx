@@ -1,5 +1,4 @@
 import React, { useState, CSSProperties, useEffect } from 'react';
-import { MdHeight } from 'react-icons/md';
 import  {QrReader} from 'react-qr-reader';
 
 const QRScanner: React.FC = () => {
@@ -21,11 +20,6 @@ const QRScanner: React.FC = () => {
             setError(null); // Reset any previous errors
         }
     };
-
-    const handleError = (err: any) => {
-        setError(err.message);
-    };
-
     const scannerStyle:CSSProperties = {
         width: '300px', // Set your desired width
         height: '300px', // Set your desired height
