@@ -1,54 +1,83 @@
-import React, { useState, CSSProperties, useEffect } from 'react';
-import  {QrReader} from 'react-qr-reader';
+// QRScanner.tsx
+import React, { useEffect, useRef, useState } from 'react';
+import QrScanner from 'qr-scanner';
 
 const QRScanner: React.FC = () => {
-    // Change data state to be an array
-    const [scannedData, setScannedData] = useState<string[]>([]);
-    const [error, setError] = useState<string | null>(null);
-    const [camera, setCamera] = useState<string>('environment');
+    const videoRef = useRef<HTMLVideoElement | null>(null);
+    const [scannedResults, setScannedResults] = useState<string[]>([]);
+    const [isScanning, setIsScanning] = useState(false); // Track whether we're currently processing a scan
+    const scannedResultsSet = new Set<string>(); // Set to track unique scanned results
+    const scanDelay = 2000; // Set the delay as 2000 ms (2 seconds)
 
-    useEffect(()=>{
-        console.log(camera);
-    }, [camera])
+    useEffect(() => {
+        const qrScanner = new QrScanner(videoRef.current!, (result) => {
+            // Check if scanning is currently disabled
+            if (!isScanning) {
+                if (typeof result === 'string' && !scannedResultsSet.has(result)) {
+                    scannedResultsSet.add(result); // Add to set to prevent duplicates
+                    setScannedResults((prevResults) => [...prevResults, result]);
+                    setIsScanning(true); // Set the scanning state to true
 
-    const handleScan = (result: any) => {
-        if (result && result.text) {
-            // Add the new scanned data to the array (if it doesn't already exist)
-            if (!scannedData.includes(result.text)) {
-                setScannedData((prevData) => [...prevData, result.text]);
+                    // Set a timeout to reset the scanning state after the delay
+                    setTimeout(() => {
+                        setIsScanning(false); // Allow scanning again after the delay
+                    }, scanDelay);
+                } else if (result && typeof result === 'object') {
+                    const resultStr = JSON.stringify(result);
+                    if (!scannedResultsSet.has(resultStr)) {
+                        scannedResultsSet.add(resultStr);
+                        setScannedResults((prevResults) => [...prevResults, resultStr]);
+                        setIsScanning(true); // Set the scanning state to true
+
+                        // Set a timeout to reset the scanning state after the delay
+                        setTimeout(() => {
+                            setIsScanning(false); // Allow scanning again after the delay
+                        }, scanDelay);
+                    }
+                }
+                console.log(result); // Log scanned result
             }
-            setError(null); // Reset any previous errors
-        }
-    };
-    const scannerStyle:CSSProperties = {
-        width: '300px', // Set your desired width
-        height: '300px', // Set your desired height
-        margin: 'auto', // Center the scanner
-        border: '2px solid #000', // Optional: Add a border for visibility
-        position: 'relative', // Position relative for any inner elements
+        });
+
+        qrScanner.start();
+
+        return () => {
+            qrScanner.stop(); // Stop scanning on component unmount
+        };
+    }, [isScanning]);
+
+    const clearResults = () => {
+        setScannedResults([]); // Clear the results
+        scannedResultsSet.clear(); // Clear the unique results set
     };
 
-    // Error: Failed to execute 'getUserMedia' on 'MediaDevices': At least one of audio and video must be requested
     return (
-        <div style={{ textAlign: 'center' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <h1>QR Code Scanner</h1>
-            <div style={scannerStyle}>
-                <QrReader  
-                    constraints={{facingMode:camera}}
-                    // chooseDeviceId={choose}
-                    onResult={handleScan}
-                />
-                <button onClick={()=>setCamera(camera=='user'?'environment':'user')}>toggle</button>
+            <div style={{ position: 'relative', width: '250px', height: '250px', overflow: 'hidden' }}>
+                <video ref={videoRef} style={{ width: '100%', height: '100%' }} />
+                <div style={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    width: '80%',
+                    height: '80%',
+                    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+                    border: '5px dashed #ff0000',
+                    transform: 'translate(-50%, -50%)',
+                    pointerEvents: 'none',
+                    borderRadius: '8px'
+                }} />
             </div>
-            {error && <p style={{ color: 'red' }}>Error: {error}</p>}
-            {scannedData.length > 0 && (
-                <div>
-                    <h2>Scanned Data:</h2>
+            {scannedResults.length > 0 && (
+                <div style={{ marginTop: '20px', textAlign: 'center' }}>
+                    <h2>Scanned Results:</h2>
                     <ul>
-                        {scannedData.map((data, index) => (
-                            <li key={index}>{data}</li> // Display each scanned QR code
+                        {scannedResults.map((result, index) => (
+                            <li key={index}>{result}</li> // Display each scanned result
                         ))}
                     </ul>
+                    <button onClick={clearResults}>Clear Results</button>
                 </div>
             )}
         </div>

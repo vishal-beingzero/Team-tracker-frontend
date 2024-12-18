@@ -1,9 +1,10 @@
-const App:React.FC = () => {
+import QRScanner from './components/QrScanner'
+function App() {
   return (
-    <>
-      <h1 className=" text-center">This is a home page...</h1>
-    </>
-  );
+    <div>
+      <QRScanner/>
+    </div>
+  )
 }
 
-export default App;
+export default App
