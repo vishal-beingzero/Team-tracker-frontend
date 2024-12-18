@@ -1,11 +1,12 @@
 import React, { useState, CSSProperties, useEffect } from 'react';
-import QrScanner from 'react-qr-scanner';
+import { MdHeight } from 'react-icons/md';
+import  {QrReader} from 'react-qr-reader';
 
 const QRScanner: React.FC = () => {
     // Change data state to be an array
     const [scannedData, setScannedData] = useState<string[]>([]);
     const [error, setError] = useState<string | null>(null);
-    const [camera, setCamera] = useState<string>('user');
+    const [camera, setCamera] = useState<string>('environment');
 
     useEffect(()=>{
         console.log(camera);
@@ -33,18 +34,17 @@ const QRScanner: React.FC = () => {
         position: 'relative', // Position relative for any inner elements
     };
 
+    // Error: Failed to execute 'getUserMedia' on 'MediaDevices': At least one of audio and video must be requested
     return (
         <div style={{ textAlign: 'center' }}>
             <h1>QR Code Scanner</h1>
             <div style={scannerStyle}>
-                <QrScanner
-                    facingMode={camera}
-                    delay={300}
-                    onError={handleError}
-                    onScan={handleScan}
-                    style={{ width: '100%', height: '100%' }} // Full width/height to match parent div
+                <QrReader  
+                    constraints={{facingMode:camera}}
+                    // chooseDeviceId={choose}
+                    containerStyle={{}}
                 />
-                <button onClick={()=>setCamera(camera==='user'?'environment':'user')}>toggle</button>
+                <button onClick={()=>setCamera(camera=='user'?'environment':'user')}>toggle</button>
             </div>
             {error && <p style={{ color: 'red' }}>Error: {error}</p>}
             {scannedData.length > 0 && (

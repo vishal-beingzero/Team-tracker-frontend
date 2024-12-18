@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Leaderboard from "./components/Leaderboard";
-import App from "./App";
+import App from "./App.tsx";
 import Adduser from './components/Adduser'
 import Navbar from "./components/Navbar";
 import TeamDetails from "./components/TeamDetails";
