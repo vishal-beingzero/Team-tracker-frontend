@@ -142,7 +142,7 @@ const AddProblems: React.FC = () => {
                 />
               </div>
               <button className="btn btn-success" onClick={handleAddUser} disabled={uploading}>
-                Add User
+                Add Problem
               </button>
             </div>
           </div>

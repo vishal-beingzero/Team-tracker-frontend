@@ -6,6 +6,8 @@ import Navbar from "./components/Navbar";
 import TeamDetails from "./components/TeamDetails";
 import AddProblems from "./components/Addproblems";
 import UserDetails from "./components/UserDetails";
+import GetAllProblems from "./components/GetAllProblems";
+import UserProblemMap from "./components/UserProblemMap";
 
 export default function SiteRoutes() {
   return (
@@ -18,6 +20,8 @@ export default function SiteRoutes() {
         <Route path="/teamdetails" element={<TeamDetails />} />
         <Route path="/userdetails" element={<UserDetails />} />
         <Route path="/addproblems" element={<AddProblems />} />
+        <Route path="/problemList" element={<GetAllProblems />} />
+        <Route path="/usersProblemSolved" element={<UserProblemMap />} />
       </Routes>
     </BrowserRouter>
   );
