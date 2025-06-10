@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { BsArrowUp, BsArrowDown, BsArrowDownUp } from "react-icons/bs"; // Import sorting icons
-import { Tooltip } from 'react-tooltip';
 import { Loader } from './Loader';
 
 interface UserProblemStatusProps {}
