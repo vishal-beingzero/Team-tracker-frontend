@@ -80,6 +80,25 @@ const Adduser: React.FC = () => {
     }
   };
 
+    const downloadExcel = () => {
+        // Sample data for the Excel file
+        const data = [
+            { name: "Vishal", gitHubHandle: "vishalkuma4180", codeforcesHandle: "vishalkuma4180", team: "" },
+            { name: "Dattatri", gitHubHandle: "dattatri3", codeforcesHandle: "bz-dattatri", team: "3" },
+            { name: "Satya", gitHubHandle: "satya456", codeforcesHandle: "bz-satya", team: "P3" },
+        ];
+        
+        // Create a worksheet from the data
+        const ws = XLSX.utils.json_to_sheet(data);
+
+        // Create a new workbook and add the worksheet to it
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Sample Data");
+
+        // Trigger a download of the Excel file
+        XLSX.writeFile(wb, "Sample_Data.xlsx");
+    };
+
   if(loading)
   {
     return <Loader/>
@@ -95,9 +114,24 @@ const Adduser: React.FC = () => {
               <div className="mb-3">
                 <input type="file" className="form-control" accept=".xlsx, .xls" onChange={handleFileUpload} disabled={uploading} />
               </div>
+              
+              <ul className='my-3'>
+                <li>
+                  There should be 4 fields "name",	"gitHubHandle",	"codeforcesHandle",	"team"
+                </li>
+                <li>
+                  Field "team" is optional and default value if not provided is "Global"
+                </li>
+              </ul>
+              <div className="d-flex justify-content-between align-items-center p-3">
               <button className="btn btn-primary mb-3" onClick={handleUploadToServer} disabled={data.length === 0 || uploading}>
                 {uploading ? 'Uploading...' : 'Upload to Server'}
               </button>
+              <button className="btn btn-primary mb-3" onClick={downloadExcel}>
+                Download Sample 
+              </button>
+
+              </div>
             </div>
           </div>
         </div>

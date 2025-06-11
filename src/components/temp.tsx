@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { BsArrowUp, BsArrowDown, BsArrowDownUp } from "react-icons/bs"; // Import sorting icons
-import { Loader } from './Loader';
+import { BsArrowUp, BsArrowDown, BsArrowDownUp } from "react-icons/bs";
 import * as XLSX from 'xlsx';
-
 
 interface UserProblemStatusProps {}
 
@@ -12,29 +10,25 @@ interface UserMap {
 }
 
 interface Problem {
-    problemId: string; // Expected field from the problems API response
-    link?: string; // Optional, not used in this example
+    problemId: string;
+    link?: string;
 }
 
 const UserProblemStatus: React.FC<UserProblemStatusProps> = () => {
     const [problems, setProblems] = useState<string[]>([]);
     const [userStatus, setUserStatus] = useState<UserMap>({});
     const [loading, setLoading] = useState(true);
-    const [sortOrder, setSortOrder] = useState<'asc' | 'desc' | 'none'>('none'); // Sorting state
-    
+    const [sortOrder, setSortOrder] = useState<'asc' | 'desc' | 'none'>('none');
 
     useEffect(() => {
         const fetchProblemsAndUsers = async () => {
             try {
-                // Fetch all problems - Adjust URL according to your API route
-                const problemsResponse = await axios.get(`${import.meta.env.VITE_REACT_BACKEND_URI}/codeforces/getAllProblem`);
+                const problemsResponse = await axios.get('/api/problems');
                 const problemsData: Problem[] = problemsResponse.data;
-                
-                // Extract only problemIds from the response
+
                 setProblems(problemsData.map(problem => problem.problemId));
 
-                // Fetch users and their problem statuses
-                const userResponse = await axios.get(`${import.meta.env.VITE_REACT_BACKEND_URI}/userProblemMap`);
+                const userResponse = await axios.get('/api/users/ok-submissions');
                 setUserStatus(userResponse.data);
 
                 setLoading(false);
@@ -47,7 +41,6 @@ const UserProblemStatus: React.FC<UserProblemStatusProps> = () => {
         fetchProblemsAndUsers();
     }, []);
 
-    // Function to calculate solved counts and return an array for sorting
     const getUserSolvedCounts = () => {
         return Object.keys(userStatus).map(user => {
             const solvedCount = problems.filter(problem => userStatus[user].includes(problem)).length;
@@ -55,7 +48,6 @@ const UserProblemStatus: React.FC<UserProblemStatusProps> = () => {
         });
     };
 
-    // Handler to toggle sort order
     const handleSort = () => {
         if (sortOrder === 'asc') {
             setSortOrder('desc');
@@ -66,48 +58,45 @@ const UserProblemStatus: React.FC<UserProblemStatusProps> = () => {
         }
     };
 
-    // Get user solved counts
     const userSolvedCounts = getUserSolvedCounts();
 
-    // Sort based on the sort order
     const sortedUsers = userSolvedCounts.sort((a, b) => {
         if (sortOrder === 'asc') {
             return a.solvedCount - b.solvedCount;
         } else if (sortOrder === 'desc') {
             return b.solvedCount - a.solvedCount;
         }
-        return 0; // No sorting applied
+        return 0;
     });
 
-        // Function to download the data as an Excel file
-        const downloadExcel = () => {
-            const ws = XLSX.utils.json_to_sheet(sortedUsers.map(({ user, solvedCount }) => ({
-                User: user,
-                ...problems.reduce((acc, problem) => {
-                    acc[problem] = userStatus[user]?.includes(problem) ? '✔️' : '❌';
-                    return acc;
-                }, {} as Record<string, string>), // Define the accumulator to be of type Record<string, string>
-                'Total Solved': solvedCount
-            })));
-    
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, 'Sheet 1');
-            XLSX.writeFile(wb, 'User_Problem_Status.xlsx');
-        };
+    // Function to download the data as an Excel file
+    const downloadExcel = () => {
+        const ws = XLSX.utils.json_to_sheet(sortedUsers.map(({ user, solvedCount }) => ({
+            User: user,
+            ...problems.reduce((acc, problem) => {
+                acc[problem] = userStatus[user]?.includes(problem) ? '✔️' : '❌';
+                return acc;
+            }, {} as Record<string, string>), // Define the accumulator to be of type Record<string, string>
+            'Total Solved': solvedCount
+        })));
 
-      if(loading)
-      {
-        return <Loader/>
-      }
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'User Problem Status');
+        XLSX.writeFile(wb, 'User_Problem_Status.xlsx');
+    };
 
     return (
         <div>
-        <div className="row justify-content-center my-4">
-        <div className="col-auto justify-content-around  ">
-            <h2 style={{display:"inline"}}>Accepted Submissions From Problems List  </h2>
-            <button className="btn btn-primary mb-3 mx-3"style={{display:"inline", borderRadius:"9px"}} onClick={downloadExcel}> Download As Excel</button>
-        </div>
-      </div>
+            <h1>User Problem Solving Status</h1>
+            <button onClick={handleSort}>
+                Sort by Total Solved {sortOrder === 'asc' ? <BsArrowUp /> : sortOrder === 'desc' ? <BsArrowDown /> : <BsArrowDownUp />}
+            </button>
+            <button onClick={downloadExcel} style={{ marginLeft: '10px' }}>
+                Download as Excel
+            </button>
+            {loading ? (
+                <p>Loading data...</p>
+            ) : (
                 <table>
                     <thead>
                         <tr>
@@ -115,9 +104,7 @@ const UserProblemStatus: React.FC<UserProblemStatusProps> = () => {
                             {problems.map((problem, index) => (
                                 <th key={index}>{problem}</th>
                             ))}
-                            <th onClick={handleSort} style={{ cursor: 'pointer' }}>
-                                Total Solved  {sortOrder === 'asc' ? <BsArrowUp /> : sortOrder === 'desc' ? <BsArrowDown /> : <BsArrowDownUp />}
-                            </th>
+                            <th>Total Solved</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -134,10 +121,9 @@ const UserProblemStatus: React.FC<UserProblemStatusProps> = () => {
                         ))}
                     </tbody>
                 </table>
+            )}
         </div>
     );
 };
 
 export default UserProblemStatus;
-
-
