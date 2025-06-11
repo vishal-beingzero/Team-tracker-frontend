@@ -3,6 +3,10 @@ import axios from 'axios';
 import { BsArrowUp, BsArrowDown, BsArrowDownUp } from "react-icons/bs"; // Import sorting icons
 import { Loader } from './Loader';
 import * as XLSX from 'xlsx';
+import './UserProblemMap.css'
+import { BsRobot } from "react-icons/bs";
+import { Tooltip } from 'react-tooltip';
+
 
 
 interface UserProblemStatusProps {}
@@ -94,6 +98,18 @@ const UserProblemStatus: React.FC<UserProblemStatusProps> = () => {
             XLSX.utils.book_append_sheet(wb, ws, 'Sheet 1');
             XLSX.writeFile(wb, 'User_Problem_Status.xlsx');
         };
+        
+        const [isButtonDisabled, setButtonDisabled] = useState(false);
+
+        const handleClick = async () => {
+            const response = await axios.get(`${import.meta.env.VITE_REACT_BACKEND_URI}/forcecrawl`);
+            console.log(response);
+            
+            // Disable the button for 5 minutes (300000 milliseconds)
+            setTimeout(() => {
+                setButtonDisabled(false);
+            }, 300000); // 5 minutes
+        };
 
       if(loading)
       {
@@ -134,7 +150,16 @@ const UserProblemStatus: React.FC<UserProblemStatusProps> = () => {
                         ))}
                     </tbody>
                 </table>
+                <div className="floating-button" onClick={handleClick}>
+            <button disabled={isButtonDisabled}><BsRobot /></button>
+            <Tooltip 
+                anchorSelect="button" 
+                content={isButtonDisabled ? "Please wait 5 minutes before clicking again." : "Click here for force crawl of users submission, It'll take 5-10 mins to crawl all submisions for all users"}
+                className="tooltip"
+            />
         </div>
+        </div>
+        
     );
 };
 

@@ -1,0 +1,26 @@
+/* FloatingButton.css */
+
+.floating-button {
+    position: fixed;
+    bottom: 20px; /* Adjust as needed */
+    right: 20px;  /* Adjust as needed */
+    z-index: 1000; /* Make sure the button is above other elements */
+}
+
+.floating-button button {
+    width: 60px;  /* Width of the button */
+    height: 60px; /* Height of the button */
+    border: none; 
+    border-radius: 50%; /* Make it a circle */
+    background-color: #41323d; /* Blue background */
+    color: white; /* Button text color */
+    font-size: 24px; /* Font size */
+    cursor: pointer; /* Change cursor to pointer */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow for button */
+    transition: background-color 0.3s; /* Transition for hover effect */
+    padding-bottom: 4px;
+}
+
+.floating-button button:hover {
+    background-color: #685361; /* Darker blue for hover effect */
+}
